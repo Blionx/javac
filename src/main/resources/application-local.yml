@@ -4,7 +4,7 @@
 
 spring:
   datasource:
-    host: ${DB_HOST}
+    host: proxysql.master.meliseginf.com:6612
     db: ${DB_NAME}
     username: ${LOCAL_DB_USER}
     password: ${LOCAL_DB_PASSWORD}
@@ -12,7 +12,7 @@ spring:
     initialization-mode: always
 
   jpa:
-    show-sql: false
+    show-sql: true
     hibernate:
       sql: debug
       ddl-auto: update
