@@ -1,3 +1,21 @@
 # Properties file for local/dev enviroment
 # You need to configure the environment variable in your IDE, more info in README.md
 # Overrides application.yml default properties
+
+spring:
+  datasource:
+    host: ${DB_HOST}
+    db: ${DB_NAME}
+    username: ${LOCAL_DB_USER}
+    password: ${LOCAL_DB_PASSWORD}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    initialization-mode: always
+
+  jpa:
+    show-sql: false
+    hibernate:
+      sql: debug
+      ddl-auto: update
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    database-platform: org.hibernate.dialect.MySQL5Dialect

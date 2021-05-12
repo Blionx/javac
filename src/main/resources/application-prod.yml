@@ -1,2 +1,19 @@
 # "prod" suffix properties file. Scopes name samples: "prod", "web-prod", "api-prod", etc.
 # Overrides application.yml default properties
+
+spring:
+  datasource:
+    host: DB_MYSQL_DESAENV04_DESAFIO_DESAFIO_ENDPOINT
+    db: desafio
+    username: desafio_WPROD
+    password: DB_MYSQL_DESAENV04_DESAFIO_DESAFIO_WPROD
+    initialization-mode: always
+
+  jpa:
+    show-sql: true
+    hibernate:
+      sql: debug
+      ddl-auto: none
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    database-platform: org.hibernate.dialect.MySQL5Dialect
