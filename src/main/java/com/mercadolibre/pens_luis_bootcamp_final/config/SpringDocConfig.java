@@ -19,8 +19,8 @@ public class SpringDocConfig {
 		OpenAPI api = new OpenAPI().info(new Info().title(appName)
 				.version(version)
 				.description(description)
-				.contact(new Contact().name("desafio-bootcamp")
-						.email("ignacio.monzalvo@mercadolibre.com")));
+				.contact(new Contact().name("pens-luis-bootcamp-final")
+						.email("luis.pens@mercadolibre.com")));
 
 		api.addServersItem(new Server().url(isLocalScope() ? "http://localhost:8080" : format("https://%s_%s.furyapps.io", SCOPE_VALUE, appName))
 				.description(format("Scope %s", SCOPE_VALUE)));
