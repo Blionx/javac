@@ -34,4 +34,9 @@ public class PartsController {
         return new ResponseEntity(service.updateStock(partCode, quantity), HttpStatus.CREATED);
     }
 
+    @GetMapping("/pricehistory/{partCode}")
+    public ResponseEntity getPriceHistory(@PathVariable String partCode, @RequestParam(defaultValue = "") String fromDate) throws Exception {
+        return new ResponseEntity(service.getPartPriceHistory(partCode, fromDate), HttpStatus.OK);
+    }
+
 }

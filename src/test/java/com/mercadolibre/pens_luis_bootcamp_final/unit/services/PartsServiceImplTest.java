@@ -18,6 +18,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 
+import javax.persistence.EntityManager;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,6 +35,7 @@ class PartsServiceImplTest {
     private PartMapper mapperMock;
     private StockCentralHouseRepository stockCentralHouseRepositoryMock;
     private CentralHouseRepository centralHouseRepositoryMock;
+    private EntityManager entityManager;
 
     @BeforeEach
     void setUp() {
@@ -43,9 +45,10 @@ class PartsServiceImplTest {
         providerRepositoryMock = Mockito.mock(ProviderRepository.class);
         stockCentralHouseRepositoryMock = Mockito.mock(StockCentralHouseRepository.class);
         centralHouseRepositoryMock = Mockito.mock(CentralHouseRepository.class);
+        entityManager = Mockito.mock(EntityManager.class);
 
         service = new PartsServiceImpl(partRepositoryMock, partRecordRepositoryMock,
-                mapperMock, providerRepositoryMock, stockCentralHouseRepositoryMock, centralHouseRepositoryMock);
+                mapperMock, providerRepositoryMock, stockCentralHouseRepositoryMock, centralHouseRepositoryMock, entityManager);
     }
 
     @Test
