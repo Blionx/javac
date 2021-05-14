@@ -4,16 +4,21 @@ package com.mercadolibre.pens_luis_bootcamp_final.services;
 //import com.google.protobuf.Api;
 import com.mercadolibre.pens_luis_bootcamp_final.dto.NewPartDto;
 import com.mercadolibre.pens_luis_bootcamp_final.dto.PartDto;
+import com.mercadolibre.pens_luis_bootcamp_final.dto.PriceVarianceItemDto;
 import com.mercadolibre.pens_luis_bootcamp_final.dto.responses.PartResponseDto;
+import com.mercadolibre.pens_luis_bootcamp_final.dto.responses.PriceHistoryDto;
 import com.mercadolibre.pens_luis_bootcamp_final.exceptions.ApiException;
 import com.mercadolibre.pens_luis_bootcamp_final.models.*;
 import com.mercadolibre.pens_luis_bootcamp_final.repositories.*;
 import com.mercadolibre.pens_luis_bootcamp_final.util.DateMapper;
 import com.mercadolibre.pens_luis_bootcamp_final.util.PartMapper;
+import org.hibernate.Filter;
+import org.hibernate.Session;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
 import java.time.LocalDate;
 import java.util.*;
 
@@ -26,17 +31,20 @@ public class PartsServiceImpl implements PartsService{
     private ProviderRepository repoProvider;
     private StockCentralHouseRepository stockCentralHouseRepository;
     private CentralHouseRepository centralHouseRepository;
+    private EntityManager entityManager;
 
     public PartsServiceImpl(PartRepository repoParts, PartRecordRepository repoPartRecords,
                             PartMapper mapper, ProviderRepository repoProvider,
                             StockCentralHouseRepository stockCentralHouseRepo,
-                            CentralHouseRepository centralHouseRepository){
+                            CentralHouseRepository centralHouseRepository,
+                            EntityManager entityManager){
         this.repoParts = repoParts;
         this.repoPartRecords = repoPartRecords;
         this.mapper = mapper;
         this.repoProvider = repoProvider;
         this.stockCentralHouseRepository = stockCentralHouseRepo;
         this.centralHouseRepository = centralHouseRepository;
+        this.entityManager = entityManager;
     }
 
     // receives controller input and returns the dto response object back to controller
@@ -218,5 +226,82 @@ public class PartsServiceImpl implements PartsService{
             case 3:
                 parts.sort(Comparator.comparing(PartRecord::getLastModification));
         }
+    }
+
+        // 6th Requirement
+    @Override
+    public PriceHistoryDto getPartPriceHistory(String partCode, String fromDate) throws Exception {
+
+        PriceHistoryDto priceHistoryDto = new PriceHistoryDto();
+        Part part = repoParts.findPartByPartCode(partCode).orElse(null);
+
+        List<PartRecord> recordsList;
+        if(part != null)
+        {
+            Session session = entityManager.unwrap(Session.class);
+            if(!fromDate.equals("")) {
+                LocalDate fecha = DateMapper.mappearFecha(fromDate);
+                Filter filter = session.enableFilter("upperdate");
+                filter.setParameter("fromDate", fecha);
+            }
+
+
+            recordsList = part.getPartRecords();
+
+            if(!fromDate.equals("")) {
+                session.disableFilter("dateFilter");
+            }
+
+            recordsList.sort(Comparator.comparing(PartRecord::getLastModification));
+
+            if (recordsList.size() > 1)
+            {
+                priceHistoryDto.setStartingNormalPrice(recordsList.get(0).getNormalPrice());
+                priceHistoryDto.setStartingUrgentPrice(recordsList.get(0).getUrgentPrice());
+                priceHistoryDto.setEndingUrgentPrice(recordsList.get(recordsList.size()-1).getUrgentPrice());
+                priceHistoryDto.setEndingNormalPrice(recordsList.get(recordsList.size()-1).getNormalPrice());
+                priceHistoryDto.setNormalPriceVariance(this.getVariance(priceHistoryDto.getStartingNormalPrice(), priceHistoryDto.getEndingNormalPrice()));
+                priceHistoryDto.setUrgentPriceVariance(this.getVariance(priceHistoryDto.getStartingUrgentPrice(), priceHistoryDto.getEndingUrgentPrice()));
+
+                List<PriceVarianceItemDto> varianceItemDtos = new ArrayList<>();
+                PartRecord lastPriceChange = null;
+
+                for (PartRecord price: recordsList) {
+                    PriceVarianceItemDto item = new PriceVarianceItemDto();
+                    double normalPriceVarition = 0;
+                    double urgentPriceVariation = 0;
+                    item.setDate(price.getLastModification().toString());
+                    item.setNormalPrice(price.getNormalPrice());
+                    item.setUrgentPrice(price.getUrgentPrice());
+                    if(lastPriceChange != null)
+                    {
+                       normalPriceVarition = this.getVariance(lastPriceChange.getNormalPrice(), price.getNormalPrice());
+                       urgentPriceVariation = this.getVariance(lastPriceChange.getUrgentPrice(), price.getUrgentPrice());
+                    }
+                    item.setNormalPriceVariation(normalPriceVarition);
+                    item.setUrgentPriceVariation(urgentPriceVariation);
+                    varianceItemDtos.add(item);
+                    lastPriceChange = price;
+
+                }
+                priceHistoryDto.setPriceChangeVarianceList(varianceItemDtos);
+
+            }
+            else
+            {
+                throw new ApiException(HttpStatus.BAD_REQUEST.name(), "we cant calculate variance with only 1 entry of price", HttpStatus.BAD_REQUEST.value());
+            }
+        }
+        else
+        {
+            throw new ApiException(HttpStatus.NOT_FOUND.name(), "No Parts found with the partcode " + partCode, HttpStatus.NOT_FOUND.value());
+        }
+        return priceHistoryDto;
+    }
+
+    public double getVariance(double startprice, double endprice)
+    {
+        double test = ((endprice *100) / startprice );
+        return test- 100;
     }
 }
