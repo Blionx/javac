@@ -12,16 +12,30 @@ import com.mercadolibre.pens_luis_bootcamp_final.services.PartsServiceImpl;
 import com.mercadolibre.pens_luis_bootcamp_final.unit.fixtures.PartsFixture;
 import com.mercadolibre.pens_luis_bootcamp_final.util.MockitoExtension;
 import com.mercadolibre.pens_luis_bootcamp_final.util.PartMapper;
+import org.hibernate.*;
+import org.hibernate.Query;
+import org.hibernate.engine.spi.FilterDefinition;
+import org.hibernate.graph.RootGraph;
+import org.hibernate.procedure.ProcedureCall;
+import org.hibernate.query.NativeQuery;
+import org.hibernate.stat.SessionStatistics;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 
+import javax.persistence.*;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaDelete;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.CriteriaUpdate;
+import javax.persistence.metamodel.Metamodel;
+import java.io.Serializable;
+import java.sql.Connection;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 @ExtendWith(MockitoExtension.class)
@@ -34,6 +48,9 @@ class PartsServiceImplTest {
     private PartMapper mapperMock;
     private StockCentralHouseRepository stockCentralHouseRepositoryMock;
     private CentralHouseRepository centralHouseRepositoryMock;
+    private EntityManager entityManager;
+    private Session session;
+    private Filter filter;
 
     @BeforeEach
     void setUp() {
@@ -43,9 +60,12 @@ class PartsServiceImplTest {
         providerRepositoryMock = Mockito.mock(ProviderRepository.class);
         stockCentralHouseRepositoryMock = Mockito.mock(StockCentralHouseRepository.class);
         centralHouseRepositoryMock = Mockito.mock(CentralHouseRepository.class);
+        entityManager = Mockito.mock(EntityManager.class);
+        session = Mockito.mock(Session.class);
+        filter = Mockito.mock(Filter.class);
 
         service = new PartsServiceImpl(partRepositoryMock, partRecordRepositoryMock,
-                mapperMock, providerRepositoryMock, stockCentralHouseRepositoryMock, centralHouseRepositoryMock);
+                mapperMock, providerRepositoryMock, stockCentralHouseRepositoryMock, centralHouseRepositoryMock, entityManager);
     }
 
     @Test
@@ -291,6 +311,32 @@ class PartsServiceImplTest {
         NewPartDto expected = PartsFixture.defaultNewPartDto();
         NewPartDto actual = service.createPart(PartsFixture.defaultNewPartDto());
         assertEquals(expected, actual);
+    }
+
+    @Test
+    @DisplayName("getPartPriceHistory with bad part")
+    void  getBadPartPriceHistory()
+    {
+
+        Exception e = assertThrows(ApiException.class,
+                () -> service.getPartPriceHistory("00000019", ""));
+        assertEquals("No Parts found with the partcode 00000019", e.getMessage());
+
+    }
+
+    @Test
+    @DisplayName("getPartPriceHistory with less than 2 partRecords")
+    void  getPartPriceHistoryWithOnePartRecord()
+    {
+        Mockito.when(partRepositoryMock.findPartByPartCode(Mockito.any()))
+                .thenReturn(Optional.of(PartsFixture.defaultPart1()));
+        Mockito.when(entityManager.unwrap(Mockito.any())).thenReturn(session);
+        Mockito.when(session.enableFilter("upperdate")).thenReturn(filter);
+        Mockito.when(filter.setParameter( Mockito.any(), Mockito.any())).thenReturn(Mockito.any());
+        Exception e = assertThrows(ApiException.class,
+                () -> service.getPartPriceHistory("00000019", "1992-05-01"));
+        assertEquals("we cant calculate variance with only 1 entry of price", e.getMessage());
+
     }
 
 
