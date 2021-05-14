@@ -1,4 +1,4 @@
-package com.mercadolibre.pens_luis_bootcamp_final.dtos;
+package com.mercadolibre.pens_luis_bootcamp_final.dto;
 
 import java.io.Serializable;
 

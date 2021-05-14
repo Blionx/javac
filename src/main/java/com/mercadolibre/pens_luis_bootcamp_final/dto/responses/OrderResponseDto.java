@@ -1,7 +1,7 @@
-package com.mercadolibre.pens_luis_bootcamp_final.dtos.responses;
+package com.mercadolibre.pens_luis_bootcamp_final.dto.responses;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.mercadolibre.pens_luis_bootcamp_final.dtos.OrderDto;
+import com.mercadolibre.pens_luis_bootcamp_final.dto.OrderDto;
 import lombok.*;
 
 import java.util.List;

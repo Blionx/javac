@@ -2,16 +2,12 @@ package com.mercadolibre.pens_luis_bootcamp_final.services;
 
 //import com.google.common.reflect.TypeToken;
 //import com.google.protobuf.Api;
-import com.mercadolibre.pens_luis_bootcamp_final.dtos.NewPartDto;
-import com.mercadolibre.pens_luis_bootcamp_final.dtos.PartDto;
-import com.mercadolibre.pens_luis_bootcamp_final.dtos.responses.PartResponseDto;
+import com.mercadolibre.pens_luis_bootcamp_final.dto.NewPartDto;
+import com.mercadolibre.pens_luis_bootcamp_final.dto.PartDto;
+import com.mercadolibre.pens_luis_bootcamp_final.dto.responses.PartResponseDto;
 import com.mercadolibre.pens_luis_bootcamp_final.exceptions.ApiException;
-import com.mercadolibre.pens_luis_bootcamp_final.models.Part;
-import com.mercadolibre.pens_luis_bootcamp_final.models.PartRecord;
-import com.mercadolibre.pens_luis_bootcamp_final.models.Provider;
-import com.mercadolibre.pens_luis_bootcamp_final.repositories.PartRecordRepository;
-import com.mercadolibre.pens_luis_bootcamp_final.repositories.PartRepository;
-import com.mercadolibre.pens_luis_bootcamp_final.repositories.ProviderRepository;
+import com.mercadolibre.pens_luis_bootcamp_final.models.*;
+import com.mercadolibre.pens_luis_bootcamp_final.repositories.*;
 import com.mercadolibre.pens_luis_bootcamp_final.util.DateMapper;
 import com.mercadolibre.pens_luis_bootcamp_final.util.PartMapper;
 import org.springframework.http.HttpStatus;
@@ -28,13 +24,19 @@ public class PartsServiceImpl implements PartsService{
     private PartRecordRepository repoPartRecords;
     private PartMapper mapper;
     private ProviderRepository repoProvider;
+    private StockCentralHouseRepository stockCentralHouseRepository;
+    private CentralHouseRepository centralHouseRepository;
 
     public PartsServiceImpl(PartRepository repoParts, PartRecordRepository repoPartRecords,
-                            PartMapper mapper, ProviderRepository repoProvider){
+                            PartMapper mapper, ProviderRepository repoProvider,
+                            StockCentralHouseRepository stockCentralHouseRepo,
+                            CentralHouseRepository centralHouseRepository){
         this.repoParts = repoParts;
         this.repoPartRecords = repoPartRecords;
         this.mapper = mapper;
         this.repoProvider = repoProvider;
+        this.stockCentralHouseRepository = stockCentralHouseRepo;
+        this.centralHouseRepository = centralHouseRepository;
     }
 
     // receives controller input and returns the dto response object back to controller
@@ -91,6 +93,17 @@ public class PartsServiceImpl implements PartsService{
         else return provider;
     }
 
+    public void updateCentralHouseStock(Part newPart){
+        List<CentralHouse> centralHouses = centralHouseRepository.findAll();
+        for (CentralHouse ch : centralHouses){
+            StockCentralHouse stockCentralHouse = new StockCentralHouse();
+            stockCentralHouse.setCentralHouse(ch);
+            stockCentralHouse.setPart(newPart);
+            stockCentralHouse.setQuantity(0);
+            stockCentralHouseRepository.save(stockCentralHouse);
+        }
+    }
+
     @Transactional
     @Override
     public NewPartDto createPart(NewPartDto newPart) {
@@ -107,6 +120,7 @@ public class PartsServiceImpl implements PartsService{
             Provider provider =  validateProvider(providerId);
             part = mapper.reverseMap(newPart, provider);
             repoParts.save(part);
+            updateCentralHouseStock(part);
         }
         return newPart;
     }

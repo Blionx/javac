@@ -1,6 +1,6 @@
 package com.mercadolibre.pens_luis_bootcamp_final.unit.beans;
 
-import com.mercadolibre.pens_luis_bootcamp_final.dtos.SampleDTO;
+import com.mercadolibre.pens_luis_bootcamp_final.dto.SampleDTO;
 import com.mercadolibre.pens_luis_bootcamp_final.beans.RandomSampleBean;
 
 import org.junit.jupiter.api.Test;

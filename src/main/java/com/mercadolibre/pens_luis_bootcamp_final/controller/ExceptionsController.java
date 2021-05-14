@@ -1,6 +1,6 @@
 package com.mercadolibre.pens_luis_bootcamp_final.controller;
 
-import com.mercadolibre.pens_luis_bootcamp_final.dtos.ErrorDto;
+import com.mercadolibre.pens_luis_bootcamp_final.dto.ErrorDto;
 import com.mercadolibre.pens_luis_bootcamp_final.exceptions.ApiException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

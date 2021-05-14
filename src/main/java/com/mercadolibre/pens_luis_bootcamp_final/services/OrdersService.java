@@ -1,10 +1,10 @@
 package com.mercadolibre.pens_luis_bootcamp_final.services;
 
-import com.mercadolibre.pens_luis_bootcamp_final.dtos.OrderRequestDto;
-import com.mercadolibre.pens_luis_bootcamp_final.dtos.responses.BasicResponseDto;
-import com.mercadolibre.pens_luis_bootcamp_final.dtos.responses.GenerateOrderResponseDto;
-import com.mercadolibre.pens_luis_bootcamp_final.dtos.responses.OrderResponseDto;
-import com.mercadolibre.pens_luis_bootcamp_final.dtos.responses.OrderStatusDto;
+import com.mercadolibre.pens_luis_bootcamp_final.dto.OrderRequestDto;
+import com.mercadolibre.pens_luis_bootcamp_final.dto.responses.BasicResponseDto;
+import com.mercadolibre.pens_luis_bootcamp_final.dto.responses.GenerateOrderResponseDto;
+import com.mercadolibre.pens_luis_bootcamp_final.dto.responses.OrderResponseDto;
+import com.mercadolibre.pens_luis_bootcamp_final.dto.responses.OrderStatusDto;
 
 public interface OrdersService {
 

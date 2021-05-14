@@ -2,7 +2,6 @@ package com.mercadolibre.pens_luis_bootcamp_final.models;
 
 import com.sun.istack.NotNull;
 import lombok.Data;
-import org.aspectj.weaver.ast.Or;
 
 import javax.persistence.*;
 import java.util.List;

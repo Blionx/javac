@@ -1,7 +1,7 @@
 package com.mercadolibre.pens_luis_bootcamp_final.services;
 
-import com.mercadolibre.pens_luis_bootcamp_final.dtos.NewPartDto;
-import com.mercadolibre.pens_luis_bootcamp_final.dtos.responses.PartResponseDto;
+import com.mercadolibre.pens_luis_bootcamp_final.dto.NewPartDto;
+import com.mercadolibre.pens_luis_bootcamp_final.dto.responses.PartResponseDto;
 
 public interface PartsService {
     PartResponseDto getParts(String queryType, String date, String order) throws Exception;

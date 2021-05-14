@@ -1,7 +1,6 @@
 package com.mercadolibre.pens_luis_bootcamp_final.util;
 
 import com.mercadolibre.pens_luis_bootcamp_final.exceptions.ApiException;
-import org.eclipse.jetty.websocket.api.StatusCode;
 import org.springframework.http.HttpStatus;
 
 import java.time.LocalDate;

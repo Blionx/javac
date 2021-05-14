@@ -1,7 +1,7 @@
 package com.mercadolibre.pens_luis_bootcamp_final.controller;
 
-import com.mercadolibre.pens_luis_bootcamp_final.dtos.OrderRequestDto;
-import com.mercadolibre.pens_luis_bootcamp_final.dtos.responses.*;
+import com.mercadolibre.pens_luis_bootcamp_final.dto.OrderRequestDto;
+import com.mercadolibre.pens_luis_bootcamp_final.dto.responses.*;
 import com.mercadolibre.pens_luis_bootcamp_final.services.OrdersService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +16,7 @@ public class OrdersController {
         service = oservice;
     }
 
-    @GetMapping("/list")
+    @GetMapping()
     public ResponseEntity<OrderResponseDto> getOrders(@RequestParam(name = "dealerNumber",required = true) Long dealerNumber,
                                                      @RequestParam(name = "deliveryStatus", defaultValue = "",required = false) String deliveryStatus,
                                                      @RequestParam(name = "order", defaultValue = "0" ,required = false) Integer order) throws Exception {

@@ -1,4 +1,4 @@
-package com.mercadolibre.pens_luis_bootcamp_final.dtos.responses;
+package com.mercadolibre.pens_luis_bootcamp_final.dto.responses;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

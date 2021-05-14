@@ -2,12 +2,9 @@ package com.mercadolibre.pens_luis_bootcamp_final.models;
 
 import com.sun.istack.NotNull;
 import lombok.Data;
-import org.aspectj.weaver.ast.Or;
 
 import javax.persistence.*;
-import java.lang.reflect.Array;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity

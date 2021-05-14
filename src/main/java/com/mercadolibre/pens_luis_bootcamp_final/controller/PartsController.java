@@ -1,7 +1,7 @@
 package com.mercadolibre.pens_luis_bootcamp_final.controller;
 
-import com.mercadolibre.pens_luis_bootcamp_final.dtos.NewPartDto;
-import com.mercadolibre.pens_luis_bootcamp_final.dtos.responses.PartResponseDto;
+import com.mercadolibre.pens_luis_bootcamp_final.dto.NewPartDto;
+import com.mercadolibre.pens_luis_bootcamp_final.dto.responses.PartResponseDto;
 import com.mercadolibre.pens_luis_bootcamp_final.services.PartsService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

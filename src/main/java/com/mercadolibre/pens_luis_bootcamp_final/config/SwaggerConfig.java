@@ -17,7 +17,7 @@ public class SwaggerConfig {
                 .select()
                 .apis(
                         RequestHandlerSelectors
-                                .basePackage("com.mercadolibre.desafio_bootcamp.controller"))
+                                .basePackage("com.mercadolibre.pens_luis_bootcamp_final.controller"))
                 .paths(PathSelectors.any())
                 .build();
     }

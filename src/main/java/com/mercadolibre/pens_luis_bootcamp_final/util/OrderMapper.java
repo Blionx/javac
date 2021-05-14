@@ -1,7 +1,7 @@
 package com.mercadolibre.pens_luis_bootcamp_final.util;
 
-import com.mercadolibre.pens_luis_bootcamp_final.dtos.OrderDetailDto;
-import com.mercadolibre.pens_luis_bootcamp_final.dtos.OrderDto;
+import com.mercadolibre.pens_luis_bootcamp_final.dto.OrderDetailDto;
+import com.mercadolibre.pens_luis_bootcamp_final.dto.OrderDto;
 import com.mercadolibre.pens_luis_bootcamp_final.models.Order;
 import com.mercadolibre.pens_luis_bootcamp_final.models.OrderDetail;
 import org.springframework.stereotype.Component;

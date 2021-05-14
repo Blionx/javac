@@ -1,7 +1,7 @@
 package com.mercadolibre.pens_luis_bootcamp_final.util;
 
-import com.mercadolibre.pens_luis_bootcamp_final.dtos.NewPartDto;
-import com.mercadolibre.pens_luis_bootcamp_final.dtos.PartDto;
+import com.mercadolibre.pens_luis_bootcamp_final.dto.NewPartDto;
+import com.mercadolibre.pens_luis_bootcamp_final.dto.PartDto;
 import com.mercadolibre.pens_luis_bootcamp_final.models.*;
 import org.springframework.stereotype.Component;
 
@@ -54,7 +54,7 @@ public class PartMapper {
         dto.setDescription(part.getDescription());
 
         PartRecord partRecord = part.getPartRecords().get(part.getPartRecords().size() -1 );
-        dto.setDiscountType(partRecord.getDiscountType().getDescription());
+        dto.setDiscountType(partRecord.getDiscountType() != null ? partRecord.getDiscountType().getDescription() : "N/A");
         dto.setUrgentPrice(partRecord.getUrgentPrice().toString());
 
         dto.setNormalPrice(partRecord.getNormalPrice().toString());

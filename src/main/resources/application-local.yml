@@ -2,6 +2,29 @@
 # You need to configure the environment variable in your IDE, more info in README.md
 # Overrides application.yml default properties
 
+#spring:
+#  datasource:
+#    #initialization-mode: always
+#    #data: classpath:/datos.sql
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+#    #    url: jdbc:mysql://proxysql.master.meliseginf.com:6612/[NombreDBMELI]?useSSL=true&serverTimezone=UTC&characterEncoding=UTF-8
+#    #    username: ${LOCAL_DB_USER}
+#    #    password: ${LOCAL_DB_PASS}
+#    url: jdbc:mysql://${DB_HOST}/${DB_NAME}?useSSL=true&serverTimezone=UTC&characterEncoding=UTF-8
+#    username: ${LOCAL_DB_USER}
+#    password: ${LOCAL_DB_PASSWORD}
+#  jpa:
+#    open-in-view: true
+#    database: mysql
+#    show-sql: true
+#    hibernate:
+#      ddl-auto: update
+#      naming:
+#        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+#    database-platform: org.hibernate.dialect.MySQL8Dialect
+#server:
+#  port: 8083 # no cambiar en prod
+
 spring:
   datasource:
     host: proxysql.master.meliseginf.com:6612

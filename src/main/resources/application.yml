@@ -27,6 +27,6 @@ springdoc:
     path: /swagger-ui.html
 
 app:
-  title: pens-luis-bootcamp-final
+  title: desafio-bootcamp
   description: @project.description@
   version: @project.version@

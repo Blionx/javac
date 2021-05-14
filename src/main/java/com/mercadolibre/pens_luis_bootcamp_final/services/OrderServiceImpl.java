@@ -1,12 +1,12 @@
 package com.mercadolibre.pens_luis_bootcamp_final.services;
 
-import com.mercadolibre.pens_luis_bootcamp_final.dtos.OrderDetailDto;
-import com.mercadolibre.pens_luis_bootcamp_final.dtos.OrderDto;
-import com.mercadolibre.pens_luis_bootcamp_final.dtos.OrderRequestDto;
-import com.mercadolibre.pens_luis_bootcamp_final.dtos.responses.BasicResponseDto;
-import com.mercadolibre.pens_luis_bootcamp_final.dtos.responses.GenerateOrderResponseDto;
-import com.mercadolibre.pens_luis_bootcamp_final.dtos.responses.OrderResponseDto;
-import com.mercadolibre.pens_luis_bootcamp_final.dtos.responses.OrderStatusDto;
+import com.mercadolibre.pens_luis_bootcamp_final.dto.OrderDetailDto;
+import com.mercadolibre.pens_luis_bootcamp_final.dto.OrderDto;
+import com.mercadolibre.pens_luis_bootcamp_final.dto.OrderRequestDto;
+import com.mercadolibre.pens_luis_bootcamp_final.dto.responses.BasicResponseDto;
+import com.mercadolibre.pens_luis_bootcamp_final.dto.responses.GenerateOrderResponseDto;
+import com.mercadolibre.pens_luis_bootcamp_final.dto.responses.OrderResponseDto;
+import com.mercadolibre.pens_luis_bootcamp_final.dto.responses.OrderStatusDto;
 import com.mercadolibre.pens_luis_bootcamp_final.exceptions.ApiException;
 import com.mercadolibre.pens_luis_bootcamp_final.models.*;
 import com.mercadolibre.pens_luis_bootcamp_final.repositories.*;
@@ -125,6 +125,9 @@ public class OrderServiceImpl implements OrdersService{
         Long numberCE = Long.parseLong(res[0]);
         Integer orderCode = Integer.parseInt(res[2]);
         List<Order> order = repoOrders.findOrderByConcessionarieIdEqualsAndCentralHouseIdEqualsAndOrderNumberCMEquals(dealerNumber, numberCE, orderCode);
+        if(order.isEmpty()){
+            throw new ApiException(HttpStatus.BAD_REQUEST.name(), "Orders not found", HttpStatus.BAD_REQUEST.value());
+        }
         OrderStatusDto orderDtos = orderStatusMapper.mapList(order.get(0));
         return orderDtos;
     }
