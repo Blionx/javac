@@ -1,6 +1,7 @@
 package com.mercadolibre.pens_luis_bootcamp_final.controller;
 
 import com.mercadolibre.pens_luis_bootcamp_final.dto.NewPartDto;
+import com.mercadolibre.pens_luis_bootcamp_final.dto.PartRecordDto;
 import com.mercadolibre.pens_luis_bootcamp_final.dto.responses.PartResponseDto;
 import com.mercadolibre.pens_luis_bootcamp_final.services.PartsService;
 import org.springframework.http.HttpStatus;
@@ -37,6 +38,11 @@ public class PartsController {
     @GetMapping("/pricehistory/{partCode}")
     public ResponseEntity getPriceHistory(@PathVariable String partCode, @RequestParam(defaultValue = "") String fromDate) throws Exception {
         return new ResponseEntity(service.getPartPriceHistory(partCode, fromDate), HttpStatus.OK);
+    }
+
+    @PostMapping("/price")
+    public ResponseEntity newPrice( @RequestBody PartRecordDto partRecord) throws Exception {
+        return new ResponseEntity(service.setNewPartRecord(partRecord), HttpStatus.OK);
     }
 
 }

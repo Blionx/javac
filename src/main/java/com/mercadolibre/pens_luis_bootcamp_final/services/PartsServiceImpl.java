@@ -4,7 +4,9 @@ package com.mercadolibre.pens_luis_bootcamp_final.services;
 //import com.google.protobuf.Api;
 import com.mercadolibre.pens_luis_bootcamp_final.dto.NewPartDto;
 import com.mercadolibre.pens_luis_bootcamp_final.dto.PartDto;
+import com.mercadolibre.pens_luis_bootcamp_final.dto.PartRecordDto;
 import com.mercadolibre.pens_luis_bootcamp_final.dto.PriceVarianceItemDto;
+import com.mercadolibre.pens_luis_bootcamp_final.dto.responses.BasicResponseDto;
 import com.mercadolibre.pens_luis_bootcamp_final.dto.responses.PartResponseDto;
 import com.mercadolibre.pens_luis_bootcamp_final.dto.responses.PriceHistoryDto;
 import com.mercadolibre.pens_luis_bootcamp_final.exceptions.ApiException;
@@ -32,12 +34,14 @@ public class PartsServiceImpl implements PartsService{
     private StockCentralHouseRepository stockCentralHouseRepository;
     private CentralHouseRepository centralHouseRepository;
     private EntityManager entityManager;
+    private DiscountTypeRepository discountRepo;
 
     public PartsServiceImpl(PartRepository repoParts, PartRecordRepository repoPartRecords,
                             PartMapper mapper, ProviderRepository repoProvider,
                             StockCentralHouseRepository stockCentralHouseRepo,
                             CentralHouseRepository centralHouseRepository,
-                            EntityManager entityManager){
+                            EntityManager entityManager,
+                            DiscountTypeRepository discountRepo){
         this.repoParts = repoParts;
         this.repoPartRecords = repoPartRecords;
         this.mapper = mapper;
@@ -45,6 +49,7 @@ public class PartsServiceImpl implements PartsService{
         this.stockCentralHouseRepository = stockCentralHouseRepo;
         this.centralHouseRepository = centralHouseRepository;
         this.entityManager = entityManager;
+        this.discountRepo = discountRepo;
     }
 
     // receives controller input and returns the dto response object back to controller
@@ -233,6 +238,9 @@ public class PartsServiceImpl implements PartsService{
     public PriceHistoryDto getPartPriceHistory(String partCode, String fromDate) throws Exception {
 
         PriceHistoryDto priceHistoryDto = new PriceHistoryDto();
+        if(partCode.length() < 8)
+            throw new ApiException(HttpStatus.BAD_REQUEST.name(), "the partcode must have 8 digits example 00000001", HttpStatus.BAD_REQUEST.value());
+
         Part part = repoParts.findPartByPartCode(partCode).orElse(null);
 
         List<PartRecord> recordsList;
@@ -241,6 +249,8 @@ public class PartsServiceImpl implements PartsService{
             Session session = entityManager.unwrap(Session.class);
             if(!fromDate.equals("")) {
                 LocalDate fecha = DateMapper.mappearFecha(fromDate);
+                if (fecha.isAfter(LocalDate.now()))
+                    throw new ApiException(HttpStatus.BAD_REQUEST.name(), "we cant filter on dates on the future", HttpStatus.BAD_REQUEST.value());
                 Filter filter = session.enableFilter("upperdate");
                 filter.setParameter("fromDate", fecha);
             }
@@ -289,7 +299,7 @@ public class PartsServiceImpl implements PartsService{
             }
             else
             {
-                throw new ApiException(HttpStatus.BAD_REQUEST.name(), "we cant calculate variance with only 1 entry of price", HttpStatus.BAD_REQUEST.value());
+                throw new ApiException(HttpStatus.BAD_REQUEST.name(), "Not enough prices change to apply variance history", HttpStatus.BAD_REQUEST.value());
             }
         }
         else
@@ -303,5 +313,50 @@ public class PartsServiceImpl implements PartsService{
     {
         double test = ((endprice *100) / startprice );
         return test- 100;
+    }
+
+    @Override
+    public BasicResponseDto setNewPartRecord(PartRecordDto partRecord) throws Exception {
+        BasicResponseDto responseDto = new BasicResponseDto();
+        if (partRecord.getPartCode().length() < 8)
+            throw new ApiException(HttpStatus.BAD_REQUEST.name(), "the partcode must have 8 digits example 00000001", HttpStatus.BAD_REQUEST.value());
+
+        Part part = repoParts.findPartByPartCode(partRecord.getPartCode()).orElse(null);
+        DiscountType discountType = discountRepo.findById(partRecord.getDiscountType()).orElse(null);
+        if(part == null)
+            throw new ApiException(HttpStatus.NOT_FOUND.name(), "No Parts found with the partcode " + partRecord.getPartCode(), HttpStatus.NOT_FOUND.value());
+
+        if(discountType == null)
+            throw new ApiException(HttpStatus.NOT_FOUND.name(), "No Discount type found with the partcode " + partRecord.getDiscountType(), HttpStatus.NOT_FOUND.value());
+        List<PartRecord> recordsList = part.getPartRecords();
+        PartRecord newPartRecord = null;
+        if(recordsList.size() > 0)
+        {
+            PartRecord finalp = recordsList.get(recordsList.size()-1);
+            double nPrice = finalp.getNormalPrice();
+            double uPrice = finalp.getUrgentPrice();
+            if (nPrice == partRecord.getNormalPrice() && uPrice == partRecord.getUrgentPrice())
+            {
+                if(finalp.getDiscountType().getId() == partRecord.getDiscountType()) {
+                    responseDto.setMessage("there is nothing to update");
+                    return responseDto;
+                }
+                else
+                    newPartRecord =finalp;
+            }
+            else
+            newPartRecord = new PartRecord();
+        }
+        else
+            newPartRecord = new PartRecord();
+
+        newPartRecord.setPart(part);
+        newPartRecord.setDiscountType(discountType);
+        newPartRecord.setNormalPrice(partRecord.getNormalPrice());
+        newPartRecord.setUrgentPrice(partRecord.getUrgentPrice());
+        newPartRecord.setLastModification(LocalDate.now());
+        repoPartRecords.save(newPartRecord);
+        responseDto.setMessage("Price Updated");
+        return responseDto;
     }
 }

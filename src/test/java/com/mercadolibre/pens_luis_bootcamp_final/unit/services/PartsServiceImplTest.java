@@ -52,6 +52,7 @@ class PartsServiceImplTest {
     private EntityManager entityManager;
     private Session session;
     private Filter filter;
+    private DiscountTypeRepository discountTypeRepositoryMock;
 
     @BeforeEach
     void setUp() {
@@ -64,9 +65,11 @@ class PartsServiceImplTest {
         entityManager = Mockito.mock(EntityManager.class);
         session = Mockito.mock(Session.class);
         filter = Mockito.mock(Filter.class);
+        discountTypeRepositoryMock = Mockito.mock(DiscountTypeRepository.class);
 
         service = new PartsServiceImpl(partRepositoryMock, partRecordRepositoryMock,
-                mapperMock, providerRepositoryMock, stockCentralHouseRepositoryMock, centralHouseRepositoryMock, entityManager);
+                mapperMock, providerRepositoryMock, stockCentralHouseRepositoryMock, centralHouseRepositoryMock,
+                entityManager, discountTypeRepositoryMock);
     }
 
     @Test
@@ -336,7 +339,7 @@ class PartsServiceImplTest {
         Mockito.when(filter.setParameter( Mockito.any(), Mockito.any())).thenReturn(Mockito.any());
         Exception e = assertThrows(ApiException.class,
                 () -> service.getPartPriceHistory("00000019", "1992-05-01"));
-        assertEquals("we cant calculate variance with only 1 entry of price", e.getMessage());
+        assertEquals("Not enough prices change to apply variance history", e.getMessage());
 
     }
 
