@@ -108,7 +108,7 @@ public class PartsFixture {
         record2.setPart(part2);
         record3.setPart(part3);
         record4.setPart(part4);
-        return Arrays.asList(record4, record2, record1, record3);
+        return Arrays.asList(record1, record2, record3, record4);
     }
 
     public static List<PartRecord> defaultOrderedListPartRecordDescription() {
