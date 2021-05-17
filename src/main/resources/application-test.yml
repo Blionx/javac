@@ -3,10 +3,10 @@
 
 spring:
   datasource:
-    host: DB_MYSQL_DESAENV04_PDELUXEDB_PDELUXEDB_ENDPOINT
-    db: pdeluxedb
-    username: pdeluxedb_WPROD
-    password: DB_MYSQL_DESAENV04_PDELUXEDB_PDELUXEDB_WPROD
+    host: DB_MYSQL_DESAENV04_PDELUXEDB2_PDELUXEDB2_ENDPOINT
+    db: pdeluxedb2
+    username: pdeluxedb2_WPROD
+    password: DB_MYSQL_DESAENV04_PDELUXEDB2_PDELUXEDB2_WPROD
     initialization-mode: always
     driver-class-name: com.mysql.cj.jdbc.Driver
 
