@@ -2,7 +2,9 @@ package com.mercadolibre.pens_luis_bootcamp_final.unit.fixtures;
 
 import com.mercadolibre.pens_luis_bootcamp_final.dto.NewPartDto;
 import com.mercadolibre.pens_luis_bootcamp_final.dto.PartDto;
+import com.mercadolibre.pens_luis_bootcamp_final.dto.PriceVarianceItemDto;
 import com.mercadolibre.pens_luis_bootcamp_final.dto.responses.PartResponseDto;
+import com.mercadolibre.pens_luis_bootcamp_final.dto.responses.PriceHistoryDto;
 import com.mercadolibre.pens_luis_bootcamp_final.models.*;
 
 import java.time.LocalDate;
@@ -243,7 +245,7 @@ public class PartsFixture {
         record.setDiscountType(discount);
         record.setNormalPrice(1500.0);
         record.setUrgentPrice(1980.0);
-        record.setLastModification(LocalDate.of(2019, 03, 12));
+        record.setLastModification(LocalDate.of(2019, 01, 01));
         return record;
     }
     public static PartRecord defaultPartRecord2() {
@@ -255,7 +257,7 @@ public class PartsFixture {
         record.setDiscountType(discount);
         record.setNormalPrice(9000.0);
         record.setUrgentPrice(11300.0);
-        record.setLastModification(LocalDate.of(2013, 11, 29));
+        record.setLastModification(LocalDate.of(2019, 02, 01));
         return record;
     }
     public static PartRecord defaultPartRecord3() {
@@ -267,19 +269,19 @@ public class PartsFixture {
         record.setDiscountType(discount);
         record.setNormalPrice(3200.0);
         record.setUrgentPrice(4250.0);
-        record.setLastModification(LocalDate.of(2021, 04, 01));
+        record.setLastModification(LocalDate.of(2019, 03, 01));
         return record;
     }
     public static PartRecord defaultPartRecord4() {
         PartRecord record = new PartRecord();
-        record.setId(3L);
+        record.setId(4L);
         record.setPart(null);
         DiscountType discount = new DiscountType();
         discount.setDescription("J04");
         record.setDiscountType(discount);
         record.setNormalPrice(4100.0);
         record.setUrgentPrice(5280.0);
-        record.setLastModification(LocalDate.of(2002, 01, 17));
+        record.setLastModification(LocalDate.of(2019, 03, 17));
         return record;
     }
     public static PartRecord defaultPartRecord5() {
@@ -407,5 +409,125 @@ public class PartsFixture {
         part.setLastModification(LocalDate.now());
         part.setPartRecords(Arrays.asList(defaultPartRecord1()));
         return part;
+    }
+
+    public static Part defaultpartwithrecords()
+    {
+        PartRecord record1 = defaultPartRecord1();
+        PartRecord record2 = defaultPartRecord2();
+        PartRecord record3 = defaultPartRecord3();
+        PartRecord record4 = defaultPartRecord4();
+        Part part = new Part();
+        part.setPartCode("88991122");
+        part.setDescription("This is a default part");
+        part.setProvider(defaultProvider());
+        Stock stock = new Stock();
+        stock.setQuantity(15);
+        part.setStock(stock);
+        part.setNetWeight(800);
+        part.setLongDimension(180);
+        part.setWidthDimenion(120);
+        part.setTalDimension(150);
+        part.setLastModification(LocalDate.now());
+
+        List<PartRecord> recordList = new ArrayList<>();
+        record1.setPart(part);
+        record2.setPart(part);
+        record3.setPart(part);
+        record4.setPart(part);
+        recordList.add(record1);
+        recordList.add(record2);
+        recordList.add(record3);
+        recordList.add(record4);
+
+        part.setPartRecords(recordList);
+        return part;
+
+    }
+
+    public static PriceHistoryDto getPriceHistory()
+    {
+
+        PriceHistoryDto history = new PriceHistoryDto();
+        Part expectedPart = defaultpartwithrecords();
+        List<PartRecord> recordsList = expectedPart.getPartRecords();
+
+        history.setStartingNormalPrice(recordsList.get(0).getNormalPrice());
+        history.setStartingUrgentPrice(recordsList.get(0).getUrgentPrice());
+        history.setEndingUrgentPrice(recordsList.get(recordsList.size()-1).getUrgentPrice());
+        history.setEndingNormalPrice(recordsList.get(recordsList.size()-1).getNormalPrice());
+        history.setNormalPriceVariance(getVariance(history.getStartingNormalPrice(), history.getEndingNormalPrice()));
+        history.setUrgentPriceVariance(getVariance(history.getStartingUrgentPrice(), history.getEndingUrgentPrice()));
+
+        List<PriceVarianceItemDto> varianceItemDtos = new ArrayList<>();
+        varianceItemDtos.add(defaultPriceVariance());
+        varianceItemDtos.add(defaultPriceVariance2());
+        varianceItemDtos.add(defaultPriceVariance3());
+        varianceItemDtos.add(defaultPriceVariance4());
+        history.setPriceChangeVarianceList(varianceItemDtos);
+        return history;
+    }
+
+    public static double getVariance(double startprice, double endprice)
+    {
+        double test = ((endprice *100) / startprice );
+        return test- 100;
+    }
+
+    public static PriceVarianceItemDto defaultPriceVariance()
+    {
+        PartRecord price = defaultPartRecord1();
+        double normalPriceVarition = 0;
+        double urgentPriceVariation = 0;
+        PriceVarianceItemDto item = new PriceVarianceItemDto();
+        item.setDate(price.getLastModification().toString());
+        item.setNormalPrice(price.getNormalPrice());
+        item.setUrgentPrice(price.getUrgentPrice());
+        item.setNormalPriceVariation(normalPriceVarition);
+        item.setUrgentPriceVariation(urgentPriceVariation);
+        return item;
+    }
+
+    public static PriceVarianceItemDto defaultPriceVariance2()
+    {
+        PartRecord price = defaultPartRecord2();
+        PriceVarianceItemDto lastPriceChange = defaultPriceVariance();
+        double  normalPriceVarition = getVariance(lastPriceChange.getNormalPrice(), price.getNormalPrice());
+        double urgentPriceVariation = getVariance(lastPriceChange.getUrgentPrice(), price.getUrgentPrice());
+        PriceVarianceItemDto item = new PriceVarianceItemDto();
+        item.setDate(price.getLastModification().toString());
+        item.setNormalPrice(price.getNormalPrice());
+        item.setUrgentPrice(price.getUrgentPrice());
+        item.setNormalPriceVariation(normalPriceVarition);
+        item.setUrgentPriceVariation(urgentPriceVariation);
+        return item;
+    }
+    public static PriceVarianceItemDto defaultPriceVariance3()
+    {
+        PartRecord price = defaultPartRecord3();
+        PriceVarianceItemDto lastPriceChange = defaultPriceVariance2();
+        double  normalPriceVarition = getVariance(lastPriceChange.getNormalPrice(), price.getNormalPrice());
+        double urgentPriceVariation = getVariance(lastPriceChange.getUrgentPrice(), price.getUrgentPrice());
+        PriceVarianceItemDto item = new PriceVarianceItemDto();
+        item.setDate(price.getLastModification().toString());
+        item.setNormalPrice(price.getNormalPrice());
+        item.setUrgentPrice(price.getUrgentPrice());
+        item.setNormalPriceVariation(normalPriceVarition);
+        item.setUrgentPriceVariation(urgentPriceVariation);
+        return item;
+    }
+    public static PriceVarianceItemDto defaultPriceVariance4()
+    {
+        PartRecord price = defaultPartRecord4();
+        PriceVarianceItemDto lastPriceChange = defaultPriceVariance3();
+        double  normalPriceVarition = getVariance(lastPriceChange.getNormalPrice(), price.getNormalPrice());
+        double urgentPriceVariation = getVariance(lastPriceChange.getUrgentPrice(), price.getUrgentPrice());
+        PriceVarianceItemDto item = new PriceVarianceItemDto();
+        item.setDate(price.getLastModification().toString());
+        item.setNormalPrice(price.getNormalPrice());
+        item.setUrgentPrice(price.getUrgentPrice());
+        item.setNormalPriceVariation(normalPriceVarition);
+        item.setUrgentPriceVariation(urgentPriceVariation);
+        return item;
     }
 }

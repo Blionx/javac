@@ -3,6 +3,7 @@ package com.mercadolibre.pens_luis_bootcamp_final.unit.services;
 import com.mercadolibre.pens_luis_bootcamp_final.dto.NewPartDto;
 import com.mercadolibre.pens_luis_bootcamp_final.dto.PartDto;
 import com.mercadolibre.pens_luis_bootcamp_final.dto.responses.PartResponseDto;
+import com.mercadolibre.pens_luis_bootcamp_final.dto.responses.PriceHistoryDto;
 import com.mercadolibre.pens_luis_bootcamp_final.exceptions.ApiException;
 import com.mercadolibre.pens_luis_bootcamp_final.models.Part;
 import com.mercadolibre.pens_luis_bootcamp_final.models.PartRecord;
@@ -337,6 +338,26 @@ class PartsServiceImplTest {
                 () -> service.getPartPriceHistory("00000019", "1992-05-01"));
         assertEquals("we cant calculate variance with only 1 entry of price", e.getMessage());
 
+    }
+
+    @Test
+    @DisplayName("getPartPriceHistory")
+    void getPartPriceHistory() throws Exception {
+        Mockito.when(partRepositoryMock.findPartByPartCode("88991122")).thenReturn(Optional.of(PartsFixture.defaultpartwithrecords()));
+        Mockito.when(entityManager.unwrap(Mockito.any())).thenReturn(session);
+
+        PriceHistoryDto priceHistory = service.getPartPriceHistory("88991122", "");
+        PriceHistoryDto expectedPriceHistory = PartsFixture.getPriceHistory();
+        assertEquals(priceHistory.getStartingNormalPrice(), expectedPriceHistory.getStartingNormalPrice());
+
+        assertEquals(priceHistory.getEndingNormalPrice(), expectedPriceHistory.getEndingNormalPrice());
+
+        assertEquals(priceHistory.getStartingUrgentPrice(), expectedPriceHistory.getStartingUrgentPrice());
+
+        assertEquals(priceHistory.getEndingUrgentPrice(), expectedPriceHistory.getEndingUrgentPrice());
+
+        assertEquals(priceHistory.getNormalPriceVariance(), expectedPriceHistory.getNormalPriceVariance());
+        assertEquals(priceHistory.getUrgentPriceVariance(), expectedPriceHistory.getUrgentPriceVariance());
     }
 
 

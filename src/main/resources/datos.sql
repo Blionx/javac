@@ -55,10 +55,16 @@ INSERT INTO `discount_types` (`id`, `description`) VALUES ('3', 'Descuento socio
 
 
 INSERT INTO `part_records` (`id`, `lastModification`, `normalPrice`, `urgentPrice`, `discount_type_id`, `part_id`) VALUES ('0', '1992-01-28', '5000', '10000', '1', '0');
+INSERT INTO `part_records` (`id`, `lastModification`, `normalPrice`, `urgentPrice`, `discount_type_id`, `part_id`) VALUES ('2', '1992-02-28', '6000', '9000', '1', '0');
+INSERT INTO `part_records` (`id`, `lastModification`, `normalPrice`, `urgentPrice`, `discount_type_id`, `part_id`) VALUES ('3', '1992-03-28', '4000', '7000', '1', '0');
+INSERT INTO `part_records` (`id`, `lastModification`, `normalPrice`, `urgentPrice`, `discount_type_id`, `part_id`) VALUES ('4', '1992-04-28', '3000', '6000', '1', '0');
+INSERT INTO `part_records` (`id`, `lastModification`, `normalPrice`, `urgentPrice`, `discount_type_id`, `part_id`) VALUES ('5', '1992-05-28', '5000', '11000', '1', '0');
+INSERT INTO `part_records` (`id`, `lastModification`, `normalPrice`, `urgentPrice`, `discount_type_id`, `part_id`) VALUES ('6', '1992-06-28', '7000', '15000', '1', '0');
+INSERT INTO `part_records` (`id`, `lastModification`, `normalPrice`, `urgentPrice`, `discount_type_id`, `part_id`) VALUES ('7', '1992-07-28', '10000', '20000', '1', '0');
 
-INSERT INTO `part_records` (`id`, `lastModification`, `normalPrice`, `urgentPrice`, `discount_type_id`, `part_id`) VALUES ('1', '1992-01-28', '5000', '10000', '2', '1');
+INSERT INTO `part_records` (`id`, `lastModification`, `normalPrice`, `urgentPrice`, `discount_type_id`, `part_id`) VALUES ('8', '1992-01-28', '5000', '10000', '2', '1');
 
-INSERT INTO `part_records` (`id`, `lastModification`, `normalPrice`, `urgentPrice`, `discount_type_id`, `part_id`) VALUES ('2', '1992-01-28', '5000', '10000', '3', '2');
+INSERT INTO `part_records` (`id`, `lastModification`, `normalPrice`, `urgentPrice`, `discount_type_id`, `part_id`) VALUES ('9', '1992-01-28', '5000', '10000', '3', '2');
 
 
 
@@ -112,7 +118,6 @@ INSERT INTO `stock_central_house` (`id`,`quantity`,`central_house_id`,`part_id`)
 # TABLE STRUCTURE FOR: users
 #
 INSERT INTO `users` (`id`,`password`,`username`,`role`) VALUES ('1', '$2a$10$DXK9eG5/tHAwMiAVB.x5vOAE6EVnC2eYtvGo7UiZpHY/rHJcqtsqe', 'admin', 'ADMIN');
-
 #
 # TABLE STRUCTURE FOR: sequence
 #
