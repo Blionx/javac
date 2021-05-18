@@ -7,7 +7,7 @@ spring:
     db: pdeluxedb2
     username: pdeluxedb2_WPROD
     password: DB_MYSQL_DESAENV04_PDELUXEDB2_PDELUXEDB2_WPROD
-    initialization-mode: always
+    initialization-mode: never
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:

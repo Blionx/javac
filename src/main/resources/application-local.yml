@@ -5,7 +5,7 @@
 #spring:
 #  datasource:
 #    #initialization-mode: always
-#    #data: classpath:/datos.sql
+#    #data: classpath:/data.sql
 #    driver-class-name: com.mysql.cj.jdbc.Driver
 #    #    url: jdbc:mysql://proxysql.master.meliseginf.com:6612/[NombreDBMELI]?useSSL=true&serverTimezone=UTC&characterEncoding=UTF-8
 #    #    username: ${LOCAL_DB_USER}
@@ -32,13 +32,11 @@ spring:
     username: ${LOCAL_DB_USER}
     password: ${LOCAL_DB_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
-    initialization-mode: always
+    initialization-mode: never
 
   jpa:
-    show-sql: false
+    show-sql: true
     hibernate:
       sql: debug
       ddl-auto: update
-      naming:
-        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
     database-platform: org.hibernate.dialect.MySQL5Dialect

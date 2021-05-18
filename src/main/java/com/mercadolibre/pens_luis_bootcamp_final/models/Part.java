@@ -33,7 +33,7 @@ public class Part {
     private Integer talDimension;
     private LocalDate lastModification;
     @OneToMany(mappedBy = "part",cascade = CascadeType.ALL)
-    @Filter(name="upperdate", condition=":fromDate <= lastModification")
+    @Filter(name="upperdate", condition=":fromDate <= last_modification")
     private List<PartRecord> partRecords;
     @OneToMany(mappedBy = "part")
     private List<OrderDetail> orderDetails;

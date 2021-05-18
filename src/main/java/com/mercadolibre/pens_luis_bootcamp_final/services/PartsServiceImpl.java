@@ -243,7 +243,7 @@ public class PartsServiceImpl implements PartsService{
 
         Part part = repoParts.findPartByPartCode(partCode).orElse(null);
 
-        List<PartRecord> recordsList;
+        List<PartRecord> recordsList = new ArrayList<>();
         if(part != null)
         {
             Session session = entityManager.unwrap(Session.class);
@@ -262,10 +262,9 @@ public class PartsServiceImpl implements PartsService{
                 session.disableFilter("dateFilter");
             }
 
-            recordsList.sort(Comparator.comparing(PartRecord::getLastModification));
-
             if (recordsList.size() > 1)
             {
+                recordsList.sort(Comparator.comparing(PartRecord::getLastModification));
                 priceHistoryDto.setStartingNormalPrice(recordsList.get(0).getNormalPrice());
                 priceHistoryDto.setStartingUrgentPrice(recordsList.get(0).getUrgentPrice());
                 priceHistoryDto.setEndingUrgentPrice(recordsList.get(recordsList.size()-1).getUrgentPrice());

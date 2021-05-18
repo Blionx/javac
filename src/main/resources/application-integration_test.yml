@@ -1,2 +1,12 @@
 # Properties file for integration tests
 # Overrides application.yml default properties
+spring:
+  datasource:
+    initialization-mode: never
+
+  jpa:
+    show-sql: true
+    hibernate:
+      sql: debug
+      ddl-auto: update
+    database-platform: org.hibernate.dialect.MySQL5Dialect

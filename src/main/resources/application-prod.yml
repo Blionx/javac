@@ -6,7 +6,7 @@ spring:
     db: desafio
     username: desafio_WPROD
     password: DB_MYSQL_DESAENV04_DESAFIO_DESAFIO_WPROD
-    initialization-mode: always
+    initialization-mode: never
 
   jpa:
     show-sql: true
